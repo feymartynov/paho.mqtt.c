@@ -1430,6 +1430,11 @@ int MQTTAsync_reconnect(MQTTAsync handle)
 exit:
 	MQTTAsync_unlock_mutex(mqttasync_mutex);
 	FUNC_EXIT_RC(rc);
+
+	if (rc == MQTTASYNC_FAILURE) {
+		Log(LOG_ERROR, -1, "[MQTTASYNC_FAILURE_DEBUG] MQTTAsync_reconnect");
+	}
+
 	return rc;
 }
 
@@ -2135,6 +2140,7 @@ static void MQTTAsync_checkTimeouts(void)
 		/* check connect timeout */
 		if (m->c->connect_state != NOT_IN_PROGRESS && MQTTTime_elapsed(m->connect.start_time) > (ELAPSED_TIME_TYPE)(m->connectTimeout * 1000))
 		{
+			Log(LOG_ERROR, -1, "[MQTTASYNC_FAILURE_DEBUG] MQTTAsync_checkTimeouts: TCP connect timeout");
 			nextOrClose(m, MQTTASYNC_FAILURE, "TCP connect timeout");
 			continue;
 		}
@@ -2456,6 +2462,11 @@ static int MQTTAsync_completeConnection(MQTTAsyncs* m, Connack* connack)
 #endif
 	}
 	FUNC_EXIT_RC(rc);
+
+	if (rc == MQTTASYNC_FAILURE) {
+		Log(LOG_ERROR, -1, "[MQTTASYNC_FAILURE_DEBUG] MQTTAsync_completeConnection");
+	}
+
 	return rc;
 }
 
@@ -2848,6 +2859,11 @@ int MQTTAsync_setCallbacks(MQTTAsync handle, void* context,
 
 	MQTTAsync_unlock_mutex(mqttasync_mutex);
 	FUNC_EXIT_RC(rc);
+
+if (rc == MQTTASYNC_FAILURE) {
+		Log(LOG_ERROR, -1, "[MQTTASYNC_FAILURE_DEBUG] MQTTAsync_setCallbacks");
+	}
+
 	return rc;
 }
 
@@ -2870,6 +2886,11 @@ int MQTTAsync_setConnectionLostCallback(MQTTAsync handle, void* context,
 
 	MQTTAsync_unlock_mutex(mqttasync_mutex);
 	FUNC_EXIT_RC(rc);
+
+if (rc == MQTTASYNC_FAILURE) {
+		Log(LOG_ERROR, -1, "[MQTTASYNC_FAILURE_DEBUG] MQTTAsync_setConnectionLostCallback");
+	}
+
 	return rc;
 }
 
@@ -2893,6 +2914,11 @@ int MQTTAsync_setMessageArrivedCallback(MQTTAsync handle, void* context,
 
 	MQTTAsync_unlock_mutex(mqttasync_mutex);
 	FUNC_EXIT_RC(rc);
+
+if (rc == MQTTASYNC_FAILURE) {
+		Log(LOG_ERROR, -1, "[MQTTASYNC_FAILURE_DEBUG] MQTTAsync_setMessageArrivedCallback");
+	}
+
 	return rc;
 }
 
@@ -2915,6 +2941,11 @@ int MQTTAsync_setDeliveryCompleteCallback(MQTTAsync handle, void* context,
 
 	MQTTAsync_unlock_mutex(mqttasync_mutex);
 	FUNC_EXIT_RC(rc);
+
+	if (rc == MQTTASYNC_FAILURE) {
+		Log(LOG_ERROR, -1, "[MQTTASYNC_FAILURE_DEBUG] MQTTAsync_setDeliveryCompleteCallback");
+	}
+
 	return rc;
 }
 
@@ -2938,6 +2969,11 @@ int MQTTAsync_setDisconnected(MQTTAsync handle, void* context, MQTTAsync_disconn
 
 	MQTTAsync_unlock_mutex(mqttasync_mutex);
 	FUNC_EXIT_RC(rc);
+
+	if (rc == MQTTASYNC_FAILURE) {
+		Log(LOG_ERROR, -1, "[MQTTASYNC_FAILURE_DEBUG] MQTTAsync_setDisconnected");
+	}
+
 	return rc;
 }
 
@@ -2960,6 +2996,11 @@ int MQTTAsync_setConnected(MQTTAsync handle, void* context, MQTTAsync_connected*
 
 	MQTTAsync_unlock_mutex(mqttasync_mutex);
 	FUNC_EXIT_RC(rc);
+
+	if (rc == MQTTASYNC_FAILURE) {
+		Log(LOG_ERROR, -1, "[MQTTASYNC_FAILURE_DEBUG] MQTTAsync_setConnected");
+	}
+
 	return rc;
 }
 
@@ -3597,6 +3638,11 @@ static int MQTTAsync_disconnect1(MQTTAsync handle, const MQTTAsync_disconnectOpt
 
 exit:
 	FUNC_EXIT_RC(rc);
+
+	if (rc == MQTTASYNC_FAILURE) {
+		Log(LOG_ERROR, -1, "[MQTTASYNC_FAILURE_DEBUG] MQTTAsync_disconnect1");
+	}
+
 	return rc;
 }
 
@@ -3810,6 +3856,11 @@ int MQTTAsync_subscribeMany(MQTTAsync handle, int count, char* const* topic, int
 
 exit:
 	FUNC_EXIT_RC(rc);
+
+	if (rc == MQTTASYNC_FAILURE) {
+		Log(LOG_ERROR, -1, "[MQTTASYNC_FAILURE_DEBUG] MQTTAsync_subscribeMany");
+	}
+
 	return rc;
 }
 
@@ -3898,6 +3949,11 @@ int MQTTAsync_unsubscribeMany(MQTTAsync handle, int count, char* const* topic, M
 
 exit:
 	FUNC_EXIT_RC(rc);
+
+	if (rc == MQTTASYNC_FAILURE) {
+		Log(LOG_ERROR, -1, "[MQTTASYNC_FAILURE_DEBUG] MQTTAsync_unsubscribeMany");
+	}
+
 	return rc;
 }
 
@@ -4016,6 +4072,11 @@ int MQTTAsync_send(MQTTAsync handle, const char* destinationName, int payloadlen
 
 exit:
 	FUNC_EXIT_RC(rc);
+
+	if (rc == MQTTASYNC_FAILURE) {
+		Log(LOG_ERROR, -1, "[MQTTASYNC_FAILURE_DEBUG] MQTTAsync_send");
+	}
+
 	return rc;
 }
 
@@ -4250,8 +4311,10 @@ static int MQTTAsync_connecting(MQTTAsyncs* m)
 	}
 
 exit:
-	if ((rc != 0 && rc != TCPSOCKET_INTERRUPTED && (m->c->connect_state != SSL_IN_PROGRESS && m->c->connect_state != WEBSOCKET_IN_PROGRESS)) || (rc == SSL_FATAL))
+	if ((rc != 0 && rc != TCPSOCKET_INTERRUPTED && (m->c->connect_state != SSL_IN_PROGRESS && m->c->connect_state != WEBSOCKET_IN_PROGRESS)) || (rc == SSL_FATAL)) {
+		Log(LOG_ERROR, -1, "[MQTTASYNC_FAILURE_DEBUG] MQTTAsync_connecting: TCP/TLS connect failure");
 		nextOrClose(m, MQTTASYNC_FAILURE, "TCP/TLS connect failure");
+	}
 
 	FUNC_EXIT_RC(rc);
 	return rc;
@@ -4297,6 +4360,7 @@ static MQTTPacket* MQTTAsync_cycle(int* sock, unsigned long timeout, int* rc)
 			if (m->c->connect_state == WAIT_FOR_CONNACK && *rc == SOCKET_ERROR)
 			{
 				Log(TRACE_MINIMUM, -1, "CONNECT sent but MQTTPacket_Factory has returned SOCKET_ERROR");
+				Log(LOG_ERROR, -1, "[MQTTASYNC_FAILURE_DEBUG] MQTTAsync_cycle: TCP connect completion failure");
 				nextOrClose(m, MQTTASYNC_FAILURE, "TCP connect completion failure");
 			}
 		}
@@ -4488,6 +4552,11 @@ int MQTTAsync_getPendingTokens(MQTTAsync handle, MQTTAsync_token **tokens)
 exit:
 	MQTTAsync_unlock_mutex(mqttasync_mutex);
 	FUNC_EXIT_RC(rc);
+
+	if (rc == MQTTASYNC_FAILURE) {
+		Log(LOG_ERROR, -1, "[MQTTASYNC_FAILURE_DEBUG] MQTTAsync_gotPendingTokens");
+	}
+
 	return rc;
 }
 
@@ -4533,6 +4602,11 @@ int MQTTAsync_isComplete(MQTTAsync handle, MQTTAsync_token dt)
 exit:
 	MQTTAsync_unlock_mutex(mqttasync_mutex);
 	FUNC_EXIT_RC(rc);
+
+	if (rc == MQTTASYNC_FAILURE) {
+		Log(LOG_ERROR, -1, "[MQTTASYNC_FAILURE_DEBUG] MQTTAsync_isComplete");
+	}
+
 	return rc;
 }
 
@@ -4580,6 +4654,11 @@ int MQTTAsync_waitForCompletion(MQTTAsync handle, MQTTAsync_token dt, unsigned l
 	}
 exit:
 	FUNC_EXIT_RC(rc);
+
+	if (rc == MQTTASYNC_FAILURE) {
+		Log(LOG_ERROR, -1, "[MQTTASYNC_FAILURE_DEBUG] MQTTAsync_waitForCompletion");
+	}
+
 	return rc;
 }
 
